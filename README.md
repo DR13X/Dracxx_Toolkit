@@ -1,7 +1,7 @@
 # DRACXX Toolkit
 
 **AI-Driven Reconnaissance & Vulnerability Intelligence Framework**  
-**v1.2.0 — MADE BY DRACXX**
+**v1.3.3 — MADE BY DRACXX**
 
 ```
 ╔════════════════════════════════════════════╗
@@ -23,31 +23,34 @@
 Most “security frameworks” blur the line between detection and exploitation.  
 DRACXX deliberately does **not**.
 
-| Capability                    | Status          |
-|-------------------------------|-----------------|
-| Passive & active recon        | Yes             |
-| Safe vulnerability detection  | Yes (Nuclei safe tags only) |
-| Real CVE/CPE version matching | Yes             |
-| EPSS + CISA KEV enrichment    | Yes             |
-| Weighted risk scoring         | Yes             |
-| Dual-mode AI analysis         | Yes (advisory only) |
-| Multi-format reporting        | Yes             |
-| Exploits / RCE / brute force  | Permanently disabled |
+| Capability                    | Status                          |
+|-------------------------------|---------------------------------|
+| Passive & active recon        | Yes                             |
+| Safe vulnerability detection  | Yes (Nuclei safe tags only)     |
+| Real CVE/CPE version matching | Yes                             |
+| EPSS + CISA KEV enrichment    | Yes                             |
+| Weighted risk scoring         | Yes                             |
+| Dual-mode AI analysis         | Yes (advisory only)             |
+| Multi-format reporting        | Yes                             |
+| Exploits / RCE / brute force  | **Permanently disabled**        |
 
 ---
 
 ## Features
 
-- **CLI-first** (Typer + Rich) + polished **interactive console** (`dracxx >`)
-- **Randomized cosmetic startup** — multiple original ASCII banners (never affects logic)
+- **CLI-first** (Typer + Rich) + polished interactive console (`dracxx >`)
+- **Randomized cosmetic startup** — multiple original ASCII banners
 - **Strict scope control** — domain/CIDR allowlists, exclusions, confirmation gating
 - **Concurrent recon pipeline** — subdomain enumeration, port/service discovery, tech detection
-- **Vulnerability detection** — Nuclei restricted to safe tags (`cve`, `exposure`, `misconfig`, `tech`…); intrusive/RCE tags excluded
-- **CVE Intelligence Engine** — real version-range evaluation (`>=2.0.0 and <2.4.15`), NVD + FIRST EPSS + CISA KEV
+- **Vulnerability detection** — Nuclei restricted to safe tags (`cve`, `exposure`, `misconfig`, `tech`, `token`, `config`, `takeover`, `panel`…); intrusive/RCE tags excluded
+- **CVE Intelligence Engine** — real version-range evaluation, NVD + FIRST EPSS + CISA KEV
 - **Confidence & Risk engines** — documented weighted scoring (not a naive CVSS+EPSS sum)
 - **Finding deduplication** across scanners into one canonical finding
+- **Multi-target workflows** — scan from a target list file
+- **Severity filtering** — filter findings / workflows by minimum severity
+- **Passive URL discovery** — waybackurls / gau + Katana crawl (DEEP profile)
 - **Dual-mode AI** — remote APIs (Anthropic / OpenAI / Google-compatible) or local (Ollama / LM Studio / vLLM). AI receives structured JSON only and never executes commands
-- **Multi-format reporting** — terminal, JSON, CSV, Markdown, HTML
+- **Multi-format reporting** — terminal, JSON, CSV, Markdown, HTML (auto-save under `~/.dracxx/reports/`)
 - **SQLite storage** with PostgreSQL-compatible SQLAlchemy schema
 - **Graceful degradation** — missing tools are skipped, never crash the run
 
@@ -81,20 +84,10 @@ dracxx/
 
 ## Quick Start
 
-### Update existing install
+### Installation (Kali / Linux)
 
 ```bash
-cd Dracxx_Toolkit   # or your clone path
-chmod +x update.sh
-./update.sh
-source .venv/bin/activate
-dracxx-vuln --version
-```
-
-### Kali / Linux Installation
-
-```bash
-git clone https://github.com/Veer-habib/Dracxx_Toolkit.git
+git clone https://github.com/DR13X/Dracxx_Toolkit.git
 cd Dracxx_Toolkit
 chmod +x install.sh
 ./install.sh
@@ -110,6 +103,16 @@ The installer:
 - Detects external tools
 - Runs `doctor`
 
+### Update existing install
+
+```bash
+cd Dracxx_Toolkit
+chmod +x update.sh   # if present
+./update.sh
+source .venv/bin/activate
+dracxx-vuln --version
+```
+
 ### Usage
 
 ```bash
@@ -122,11 +125,14 @@ dracxx-vuln workflow example.com --profile FAST --output report.json
 # Full pipeline — STANDARD (balanced)
 dracxx-vuln workflow example.com --profile STANDARD --output report.json
 
+# Full pipeline — DEEP
+dracxx-vuln workflow example.com --profile DEEP --output report.json
+
+# Multi-target from file
+dracxx-vuln workflow -l targets.txt --profile STANDARD
+
 # Recon only
 dracxx-vuln recon example.com --profile DEEP
-
-# Vulnerability detection (safe templates)
-dracxx-vuln scan example.com
 
 # CVE correlation
 dracxx-vuln cve nginx --version 1.18.0
@@ -141,7 +147,7 @@ dracxx-vuln tools
 
 ### Interactive Console
 
-```
+```text
 dracxx-vuln console
 
 dracxx > set target example.com
@@ -198,6 +204,8 @@ dracxx-vuln report --fmt json     --output assessment.json
 dracxx-vuln report --fmt csv      --output assessment.csv
 ```
 
+Reports are also auto-saved under `~/.dracxx/reports/`.
+
 ---
 
 ## Docker (optional)
@@ -244,4 +252,4 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-**DRACXX v1.2.0** — Detection. Intelligence. Nothing more.
+**DRACXX v1.3.3** — Detection. Intelligence. Nothing more.
